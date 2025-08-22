@@ -17,10 +17,22 @@ public class EmployeeDAO {
     private static final String DELETE_SQL = "DELETE FROM Employee WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM Employee";
 
+    private Connection getConnection(){
+        try{
+            Connection conn = DatabaseUtil.getDataSource().getConnection();
+            System.out.println("Connected Successfully!!");
+            return conn;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    private Connection conn = getConnection();
+
     //Inserting in table
     public void insert(Employee e) throws SQLException {
-        try(Connection conn = DatabaseUtil.getDataSource().getConnection();
-            PreparedStatement ps = conn.prepareStatement(INSERT_SQL);){
+        try(PreparedStatement ps = conn.prepareStatement(INSERT_SQL);){
             ps.setString(1,e.getId());
             ps.setString(2,e.getName());
             ps.setString(3, String.valueOf(e.getRole()));
@@ -31,8 +43,7 @@ public class EmployeeDAO {
 
     //Retrieving data from table using id
     public Employee getById(String id) throws SQLException{
-        try(Connection conn = DatabaseUtil.getDataSource().getConnection();
-        PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID);){
+        try(PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID);){
             ps.setString(1,id);
             try(ResultSet rs = ps.executeQuery()){
                 if(rs.next()){
@@ -51,8 +62,7 @@ public class EmployeeDAO {
     //Retriving all data from table
     public List<Employee> getAll(String id) throws SQLException{
         List<Employee> employees = new ArrayList<>();
-        try(Connection conn = DatabaseUtil.getDataSource().getConnection();
-            PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
+        try(PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
             ResultSet rs = ps.executeQuery();){
                 while(rs.next()){
                     Employee e = new Employee();
@@ -68,8 +78,7 @@ public class EmployeeDAO {
 
     //Updating table
     public void update(Employee employee) throws SQLException{
-        try (Connection conn = DatabaseUtil.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
+        try (PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
             ps.setString(1, employee.getName());
             ps.setString(2, String.valueOf(employee.getRole()));
             ps.setString(3, employee.getReportingTo());
@@ -80,8 +89,7 @@ public class EmployeeDAO {
 
     //delete table
     public void delete(String id) throws SQLException{
-        try (Connection conn = DatabaseUtil.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+        try (PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
             ps.setString(1, id);
             ps.executeUpdate();
         }

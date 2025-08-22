@@ -1,4 +1,4 @@
-package com.example.util;
+package com.example.service;
 
 import com.example.dao.EmployeeDAO;
 import com.example.dao.EmployeeDetailDAO;
@@ -8,12 +8,13 @@ import com.example.model.EmployeeDetail;
 
 import java.util.Scanner;
 
-public class EmployeeManager {
+public class EmployeeManagerService implements EmployeeManagerInterface {
 
     private static final EmployeeDAO employeeDAO = new EmployeeDAO();
     private static final EmployeeDetailDAO detailDAO = new EmployeeDetailDAO();
 
-    public static void createEmployee(Scanner scanner) {
+    private static Scanner scanner = new Scanner(System.in);
+    public void createEmployee () {
         try {
             System.out.print("Enter Employee ID: ");
             String id = scanner.nextLine();
@@ -51,7 +52,7 @@ public class EmployeeManager {
         }
     }
 
-    public static void readEmployee(Scanner scanner) {
+    public void readEmployee() {
         try {
             System.out.print("Enter Employee ID: ");
             String id = scanner.nextLine();
@@ -85,7 +86,7 @@ public class EmployeeManager {
         }
     }
 
-    public static void updateEmployee(Scanner scanner) {
+    public void updateEmployee() {
         try {
             System.out.print("Enter Employee ID to update: ");
             String id = scanner.nextLine();
@@ -137,7 +138,7 @@ public class EmployeeManager {
         }
     }
 
-    public static void deleteEmployee(Scanner scanner) {
+    public void deleteEmployee() {
         try {
             System.out.print("Enter Employee ID to delete: ");
             String id = scanner.nextLine();

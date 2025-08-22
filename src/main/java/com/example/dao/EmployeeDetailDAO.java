@@ -14,9 +14,20 @@ public class EmployeeDetailDAO {
     private static final String DELETE_SQL = "DELETE FROM EmployeeDetail WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM EmployeeDetail";
 
+    private Connection getConnection(){
+        try{
+            Connection conn = DatabaseUtil.getDataSource().getConnection();
+            System.out.println("Connected Successfully!!");
+            return conn;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    private Connection conn = getConnection();
     public void create(EmployeeDetail detail) throws SQLException {
-        try (Connection conn = DatabaseUtil.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
+        try (PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
             ps.setString(1, detail.getId());
             ps.setInt(2, detail.getAge());
             ps.setInt(3, detail.getExperienceYears());
@@ -27,8 +38,7 @@ public class EmployeeDetailDAO {
     }
 
     public EmployeeDetail getById(String id) throws SQLException {
-        try (Connection conn = DatabaseUtil.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
+        try (PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -47,8 +57,7 @@ public class EmployeeDetailDAO {
 
     public List<EmployeeDetail> getAll() throws SQLException {
         List<EmployeeDetail> details = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
+        try (PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 EmployeeDetail detail = new EmployeeDetail();
@@ -64,8 +73,7 @@ public class EmployeeDetailDAO {
     }
 
     public void update(EmployeeDetail detail) throws SQLException {
-        try (Connection conn = DatabaseUtil.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
+        try (PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
             ps.setInt(1, detail.getAge());
             ps.setInt(2, detail.getExperienceYears());
             ps.setString(3, detail.getDepartmentName());
@@ -76,8 +84,7 @@ public class EmployeeDetailDAO {
     }
 
     public void delete(String id) throws SQLException {
-        try (Connection conn = DatabaseUtil.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+        try (PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
             ps.setString(1, id);
             ps.executeUpdate();
         }
